@@ -13,12 +13,27 @@
 												     , '/Images/Image 5', '/Images/Image 8', '/Images/Image 10'];
 			private static var sunflowerPictures:Array = ['/Images/Image 1', '/Images/Image 3'
 													    , '/Images/Image 5', '/Images/Image 7', '/Images/Image 9'];
+			
+			protected function button2_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				CurrentAction = 1;
+				TextField1.text = "Сажаем клевер";
+			}
+			
 			protected function PlantPotato_clickHandler(event:MouseEvent):void
 			{
 				// TODO Auto-generated method stub
 				CurrentAction = 2;
 				TextField1.text = "Сажаем карторшку"; 
 			}
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				CurrentAction = 3;
+				TextField1.text = "Сажаем подсолнух"; 
+			}
+			
 
 			protected function application1_clickHandler(event:MouseEvent):void
 			{
@@ -48,58 +63,60 @@
 				var p:Point = new Point;
 				var imageSrc:String = "";
 				var age:Number = 4;
-				for(i = 0; i < partCount; i++)
+				switch(CurrentAction)
 				{
-					for(j = 0; j < partCount; j++)
+					case 1:
+						imageSrc = flowerPictures[age];
+						break;
+					case 2:
+						imageSrc = potatoPictures[age];
+						break;
+					case 3:
+						imageSrc = sunflowerPictures[age];
+						break;
+				}
+				if(CurrentAction == 0)
+				{
+					CurrentAction = 1;
+					switch(CurrentAction)
 					{
-						switch(CurrentAction)
-						{
-							case 1:
-								imageSrc = flowerPictures[age];
-								break;
-							case 2:
-								imageSrc = potatoPictures[age];
-								break;
-							case 3:
-								imageSrc = sunflowerPictures[age];
-								break;
-						}
-						p.x = (maxX/2) + startX + partX * i;
-						p.y = startY + partY * j;
-						p = turnPoint(p);
-						currentImage = new Image();
-						currentImage.source = "../assets/" + allObjects[CurrentAction - 1] + imageSrc + ".png";
-						TextField1.text = "" + currentImage;
-						currentImage.x = p.x;
-						currentImage.y = p.y;
-						currentImage.load();
-						TextField1.text = "" + currentImage.width;
-						this.parent.addChild(currentImage);
+						case 1:
+							imageSrc = flowerPictures[age];
+							break;
+						case 2:
+							imageSrc = potatoPictures[age];
+							break;
+						case 3:
+							imageSrc = sunflowerPictures[age];
+							break;
 					}
+					for(i = 0; i < partCount; i++)
+					{
+						for(j = 0; j < partCount; j++)
+						{							
+							p.x = (maxX/2) + startX + partX * i;
+							p.y = startY + partY * j;
+							p = turnPoint(p);
+							currentImage = new Image();
+							currentImage.source = "../assets/" + allObjects[CurrentAction - 1] + imageSrc + ".png";
+							TextField1.text = "" + currentImage;
+							currentImage.x = p.x;
+							currentImage.y = p.y;
+							currentImage.load();
+							TextField1.text = "" + currentImage.width;
+							this.parent.addChild(currentImage);
+						}
+					}
+					CurrentAction = 0;
 				}
 				if(CurrentAction == 1)
 				{
 					currentImage = new Image();
-					currentImage.source = "../assets/"+allObjects[CurrentAction-1]+"/Images/Image 1.png";
+					currentImage.source = "../assets/" + allObjects[CurrentAction - 1] + imageSrc + ".png";
 					currentImage.x = event.stageX;
 					currentImage.y = event.stageY-60;
 					this.parent.addChild(currentImage);
-					
 				}
-			}
-
-			protected function button1_clickHandler(event:MouseEvent):void
-			{
-				// TODO Auto-generated method stub
-				CurrentAction = 3;
-				TextField1.text = "Сажаем подсолнух"; 
-			}
-
-			protected function button2_clickHandler(event:MouseEvent):void
-			{
-				// TODO Auto-generated method stub
-				CurrentAction = 1;
-				TextField1.text = "Сажаем клевер";
 			}
 
 		]]>
@@ -116,6 +133,6 @@
 	<s:Button x="881.25" y="67.9" label="Посадить клевер" width="150" click="button2_clickHandler(event)"/>
 	<s:Button x="881.25" y="96.9" label="Собрать" width="150"/>
 	<s:Button x="881.25" y="125.9" label="Рости" width="150"/>
-	<mx:Image x="0.05" y="0" source="../assets/BG.jpg" width="862" height="500" click="image1_clickHandler(event)"/>
+	<mx:Image x="-0.05" y="-0.1" source="../assets/BG.jpg" width="862" height="500" click="image1_clickHandler(event)"/>
 	<s:TextInput y="154" width="144" id="TextField1" x="881"/>
 </s:Application>
