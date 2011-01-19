@@ -99,7 +99,6 @@
 							p = turnPoint(p);
 							currentImage = new Image();
 							currentImage.source = "../assets/" + allObjects[CurrentAction - 1] + imageSrc + ".png";
-							TextField1.text = "" + currentImage;
 							currentImage.x = p.x;
 							currentImage.y = p.y;
 							currentImage.load();
@@ -109,10 +108,11 @@
 					}
 					CurrentAction = 0;
 				}
-				if(CurrentAction == 1)
+				if(CurrentAction > 0)
 				{
 					currentImage = new Image();
 					currentImage.source = "../assets/" + allObjects[CurrentAction - 1] + imageSrc + ".png";
+					TextField1.text = "" + currentImage.source;
 					currentImage.x = event.stageX;
 					currentImage.y = event.stageY-60;
 					this.parent.addChild(currentImage);
