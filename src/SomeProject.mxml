@@ -7,10 +7,16 @@
 		<![CDATA[
 			public static var CurrentAction:Number = 0;
 			private static var currentImage:Image;
+			private static var allObjects:Array = ['clover', 'potato', 'sunflower'];
+			private static var flowerPictures:Array = ['/Image 1', '/Image 3', '/Image 5', '/Image 7', '/Image 9'];
+			private static var potatoPictures:Array = ['/Images/Image 1', '/Images/Image 3'
+												     , '/Images/Image 5', '/Images/Image 8', '/Images/Image 10'];
+			private static var sunflowerPictures:Array = ['/Images/Image 1', '/Images/Image 3'
+													    , '/Images/Image 5', '/Images/Image 7', '/Images/Image 9'];
 			protected function PlantPotato_clickHandler(event:MouseEvent):void
 			{
 				// TODO Auto-generated method stub
-				CurrentAction = 1;
+				CurrentAction = 2;
 				TextField1.text = "Сажаем карторшку"; 
 			}
 
@@ -18,19 +24,82 @@
 			{
 				// TODO Auto-generated method stub
 			}
+			
+			//protected class point
+			
+			private function turnPoint(p:Point):Point
+			{
+				var cos:Number = Math.cos(45);
+				return new Point( (cos*p.x-cos*p.y) * 1.9 + 5 , (cos*p.x+cos*p.y) - 205);
+			}
 
 			protected function image1_clickHandler(event:MouseEvent):void
 			{
-				// TODO Auto-generated method stub
-				TextField1.text = ""+event.stageX+" "+event.stageY;
+				var maxX:Number = 691;
+				var maxY:Number = 362;
+				var startX:Number = 64;
+				var startY:Number = 57;
+				var part:Number = 340; //195
+				var partCount:Number = 7;
+				var partX:Number = part/7;
+				var partY:Number = part/7;
+				var i:Number;
+				var j:Number;
+				var p:Point = new Point;
+				var imageSrc:String = "";
+				var age:Number = 4;
+				for(i = 0; i < partCount; i++)
+				{
+					for(j = 0; j < partCount; j++)
+					{
+						switch(CurrentAction)
+						{
+							case 1:
+								imageSrc = flowerPictures[age];
+								break;
+							case 2:
+								imageSrc = potatoPictures[age];
+								break;
+							case 3:
+								imageSrc = sunflowerPictures[age];
+								break;
+						}
+						p.x = (maxX/2) + startX + partX * i;
+						p.y = startY + partY * j;
+						p = turnPoint(p);
+						currentImage = new Image();
+						currentImage.source = "../assets/" + allObjects[CurrentAction - 1] + imageSrc + ".png";
+						TextField1.text = "" + currentImage;
+						currentImage.x = p.x;
+						currentImage.y = p.y;
+						currentImage.load();
+						TextField1.text = "" + currentImage.width;
+						this.parent.addChild(currentImage);
+					}
+				}
 				if(CurrentAction == 1)
 				{
 					currentImage = new Image();
-					currentImage.source = "../assets/BG.jpg";
+					currentImage.source = "../assets/"+allObjects[CurrentAction-1]+"/Images/Image 1.png";
 					currentImage.x = event.stageX;
-					currentImage.y = event.stageY;
+					currentImage.y = event.stageY-60;
 					this.parent.addChild(currentImage);
+					
 				}
+			}
+
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				CurrentAction = 3;
+				TextField1.text = "Сажаем подсолнух"; 
+			}
+
+			protected function button2_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				CurrentAction = 1;
+				TextField1.text = "Сажаем клевер";
 			}
 
 		]]>
@@ -43,8 +112,8 @@
 		<!-- Разместить невизуальные элементы (например, службы или объекты значений) -->
 	</fx:Declarations>
 	<s:Button x="881.25" y="9.9" label="Посадить картошку" width="150" id="PlantPotato" click="PlantPotato_clickHandler(event)"/>
-	<s:Button x="881.25" y="38.9" label="Посадить подсолнух" width="150"/>
-	<s:Button x="881.25" y="67.9" label="Посадить клевер" width="150"/>
+	<s:Button x="881.25" y="38.9" label="Посадить подсолнух" width="150" click="button1_clickHandler(event)"/>
+	<s:Button x="881.25" y="67.9" label="Посадить клевер" width="150" click="button2_clickHandler(event)"/>
 	<s:Button x="881.25" y="96.9" label="Собрать" width="150"/>
 	<s:Button x="881.25" y="125.9" label="Рости" width="150"/>
 	<mx:Image x="0.05" y="0" source="../assets/BG.jpg" width="862" height="500" click="image1_clickHandler(event)"/>
