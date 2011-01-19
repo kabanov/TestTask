@@ -4,7 +4,6 @@ package {
     public class SomeProject extends Sprite {
 
         public function SomeProject() {
-            trace(">> SomeProject Instantiated!");
         }
     }
 }

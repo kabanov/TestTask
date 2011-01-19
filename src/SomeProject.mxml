@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="955" minHeight="600" width="1047" click="application1_clickHandler(event)">
+
+	<fx:Script>
+		<![CDATA[
+			public static var CurrentAction:Number = 0;
+			private static var currentImage:Image;
+			protected function PlantPotato_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				CurrentAction = 1;
+				TextField1.text = "Сажаем карторшку"; 
+			}
+
+			protected function application1_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+			}
+
+			protected function image1_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				TextField1.text = ""+event.stageX+" "+event.stageY;
+				if(CurrentAction == 1)
+				{
+					currentImage = new Image();
+					currentImage.source = "../assets/BG.jpg";
+					currentImage.x = event.stageX;
+					currentImage.y = event.stageY;
+					this.parent.addChild(currentImage);
+				}
+			}
+
+		]]>
+	</fx:Script>
+
+	<s:states>
+		<s:State name="State1"/>
+	</s:states>
+	<fx:Declarations>
+		<!-- Разместить невизуальные элементы (например, службы или объекты значений) -->
+	</fx:Declarations>
+	<s:Button x="881.25" y="9.9" label="Посадить картошку" width="150" id="PlantPotato" click="PlantPotato_clickHandler(event)"/>
+	<s:Button x="881.25" y="38.9" label="Посадить подсолнух" width="150"/>
+	<s:Button x="881.25" y="67.9" label="Посадить клевер" width="150"/>
+	<s:Button x="881.25" y="96.9" label="Собрать" width="150"/>
+	<s:Button x="881.25" y="125.9" label="Рости" width="150"/>
+	<mx:Image x="0.05" y="0" source="../assets/BG.jpg" width="862" height="500" click="image1_clickHandler(event)"/>
+	<s:TextInput y="154" width="144" id="TextField1" x="881"/>
+</s:Application>
