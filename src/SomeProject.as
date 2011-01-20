@@ -5,6 +5,10 @@ package {
 
         public function SomeProject() {
         }
+		
+		public function test() {
+			
+		}
     }
 }
 

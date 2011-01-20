@@ -41,23 +41,32 @@
 			}
 			
 			//protected class point
-			
 			private function turnPoint(p:Point):Point
 			{
-				var cos:Number = Math.cos(45);
-				return new Point( (cos*p.x-cos*p.y) * 1.9 + 5 , (cos*p.x+cos*p.y) - 205);
+				var cos:Number = 0.707;
+				var sin:Number = 0.707;
+				return new Point( int((cos*p.x-sin*p.y) * 1.9 - 130) , int((sin*p.x+cos*p.y) - 290));
+			}
+			private function unTurnPoint(p:Point):Point
+			{
+				var cos:Number = 0.707;
+				var sin:Number = -0.707;
+				p.x += 130;
+				p.x /= 1.9;
+				p.y += 290;
+				return new Point( int(cos*p.x-sin*p.y) , int(sin*p.x+cos*p.y));
 			}
 
 			protected function image1_clickHandler(event:MouseEvent):void
 			{
-				var maxX:Number = 691;
-				var maxY:Number = 362;
+				var maxX:Number = 691; //691
+				var maxY:Number = 362; //362
 				var startX:Number = 64;
 				var startY:Number = 57;
-				var part:Number = 340; //195
-				var partCount:Number = 7;
-				var partX:Number = part/7;
-				var partY:Number = part/7;
+				var part:Number = 260; //195
+				var partCount:Number = 6;
+				var partX:Number = part/partCount;
+				var partY:Number = part/partCount;
 				var i:Number;
 				var j:Number;
 				var p:Point = new Point;
@@ -97,11 +106,14 @@
 							p.x = (maxX/2) + startX + partX * i;
 							p.y = startY + partY * j;
 							p = turnPoint(p);
+							//p = unTurnPoint(p);
 							currentImage = new Image();
 							currentImage.source = "../assets/" + allObjects[CurrentAction - 1] + imageSrc + ".png";
 							currentImage.x = p.x;
 							currentImage.y = p.y;
-							currentImage.load();
+							currentImage.width = 100;
+							currentImage.scaleContent = false;
+							//currentImage.load();
 							TextField1.text = "" + currentImage.width;
 							this.parent.addChild(currentImage);
 						}
@@ -110,12 +122,35 @@
 				}
 				if(CurrentAction > 0)
 				{
-					currentImage = new Image();
-					currentImage.source = "../assets/" + allObjects[CurrentAction - 1] + imageSrc + ".png";
-					TextField1.text = "" + currentImage.source;
-					currentImage.x = event.stageX;
-					currentImage.y = event.stageY-60;
-					this.parent.addChild(currentImage);
+					p.x = event.stageX;
+					p.y = event.stageY-130;
+					p = unTurnPoint(p);
+					if(p.x > (maxX/2) + startX && p.x < (maxX/2) + startX + part
+						&& p.y > startY && p.y < startY + part)
+					{
+						currentImage = new Image();
+						currentImage.source = "../assets/" + allObjects[CurrentAction - 1] + imageSrc + ".png";
+						TextField1.text = "true" + p;
+						p.x -= startX;
+						p.y -= startY;
+						TextField1.text = "" + int(p.x);
+						p.x = int(int(p.x/partX)*partX);
+						p.y = int(int(p.y/partY)*partY);
+						TextField1.text += " " + p.x + " " + int(partX);
+						p.x += startX;
+						p.y += startY;
+						p = turnPoint(p);
+						currentImage.x = p.x;
+						currentImage.y = p.y;
+						currentImage.width = 100;
+						currentImage.height = 130;
+						currentImage.scaleContent = false;
+						this.parent.addChild(currentImage);
+					}
+					else
+					{
+						TextField1.text = "false" + p;
+					}
 				}
 			}
 
@@ -133,6 +168,7 @@
 	<s:Button x="881.25" y="67.9" label="Посадить клевер" width="150" click="button2_clickHandler(event)"/>
 	<s:Button x="881.25" y="96.9" label="Собрать" width="150"/>
 	<s:Button x="881.25" y="125.9" label="Рости" width="150"/>
-	<mx:Image x="-0.05" y="-0.1" source="../assets/BG.jpg" width="862" height="500" click="image1_clickHandler(event)"/>
+	<mx:Image x="-0.05" y="-0.1" source="../assets/BG.jpg" width="862" height="500" click="image1_clickHandler(event)" scaleContent="true"/>
 	<s:TextInput y="154" width="144" id="TextField1" x="881"/>
+	<mx:Image x="900" y="329" source="../assets/sunflower/Images/Image 9.png" scaleContent="false" width="100" height="130"/>
 </s:Application>
