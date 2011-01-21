@@ -1,16 +1,12 @@
 package {
-    import flash.display.Bitmap;
-    import flash.display.BitmapData;
-    import flash.display.Loader;
     import flash.display.Sprite;
-    import flash.events.Event;
-    import flash.net.URLRequest;
-    import flash.system.LoaderContext;
+    
+    import spark.components.SkinnableContainer;
 
     public class SomeProject extends Sprite {
 
         public function SomeProject() {
-			BitmapData
+			SkinnableContainer
         }
     }
 }
