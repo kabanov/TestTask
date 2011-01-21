@@ -5,6 +5,8 @@
 
 	<fx:Script>
 		<![CDATA[
+			import utils.ImageCached;
+			
 			public static var CurrentAction:Number = 0;
 			private static var currentImage:Image;
 			private static var allObjects:Array = ['clover', 'potato', 'sunflower'];
@@ -38,6 +40,7 @@
 			protected function application1_clickHandler(event:MouseEvent):void
 			{
 				// TODO Auto-generated method stub
+				image1_clickHandler(event);
 			}
 			
 			//protected class point
@@ -107,7 +110,7 @@
 							p.y = startY + partY * j;
 							p = turnPoint(p);
 							//p = unTurnPoint(p);
-							currentImage = new Image();
+							currentImage = new ImageCached();
 							currentImage.source = "../assets/" + allObjects[CurrentAction - 1] + imageSrc + ".png";
 							currentImage.x = p.x;
 							currentImage.y = p.y;
@@ -128,7 +131,7 @@
 					if(p.x > (maxX/2) + startX && p.x < (maxX/2) + startX + part
 						&& p.y > startY && p.y < startY + part)
 					{
-						currentImage = new Image();
+						currentImage = new ImageCached();
 						currentImage.source = "../assets/" + allObjects[CurrentAction - 1] + imageSrc + ".png";
 						TextField1.text = "true" + p;
 						p.x -= startX;
@@ -168,7 +171,7 @@
 	<s:Button x="881.25" y="67.9" label="Посадить клевер" width="150" click="button2_clickHandler(event)"/>
 	<s:Button x="881.25" y="96.9" label="Собрать" width="150"/>
 	<s:Button x="881.25" y="125.9" label="Рости" width="150"/>
-	<mx:Image x="-0.05" y="-0.1" source="../assets/BG.jpg" width="862" height="500" click="image1_clickHandler(event)" scaleContent="true"/>
+	<mx:Image x="0" y="0" source="../assets/BG.jpg" width="862" height="500" click="image1_clickHandler(event)"/>
 	<s:TextInput y="154" width="144" id="TextField1" x="881"/>
 	<mx:Image x="900" y="329" source="../assets/sunflower/Images/Image 9.png" scaleContent="false" width="100" height="130"/>
 </s:Application>
