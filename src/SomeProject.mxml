@@ -1,26 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
 			   xmlns:s="library://ns.adobe.com/flex/spark" 
-			   xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="955" minHeight="600" width="1047" click="application1_clickHandler(event)">
+			   xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="955" minHeight="600" width="1047" click="application1_clickHandler(event)" activate="application1_activateHandler(event)">
 
 	<fx:Script>
 		<![CDATA[
+			import mx.controls.Alert;
+			
 			import utils.Figure;
 			import utils.ImageCached;
+			import utils.MyEvents;
 			
 			public static var CurrentAction:Number = 0;
 			private static var currentImage:Image;
-			private static var allObjects:Array = ['clover', 'potato', 'sunflower'];
-			private static var flowerPictures:Array = ['/Image 1', '/Image 3', '/Image 5', '/Image 7', '/Image 9'];
-			private static var potatoPictures:Array = ['/Images/Image 1', '/Images/Image 3'
-												     , '/Images/Image 5', '/Images/Image 8', '/Images/Image 10'];
-			private static var sunflowerPictures:Array = ['/Images/Image 1', '/Images/Image 3'
-													    , '/Images/Image 5', '/Images/Image 7', '/Images/Image 9'];
+			private static var arrFigures:Array = new Array;
 			
 			protected function button2_clickHandler(event:MouseEvent):void
 			{
 				// TODO Auto-generated method stub
 				CurrentAction = 1;
+				MyEvents.gather = false;
 				TextField1.text = "Сажаем клевер";
 			}
 			
@@ -28,15 +27,24 @@
 			{
 				// TODO Auto-generated method stub
 				CurrentAction = 2;
+				MyEvents.gather = false;
 				TextField1.text = "Сажаем карторшку"; 
 			}
 			protected function button1_clickHandler(event:MouseEvent):void
 			{
 				// TODO Auto-generated method stub
 				CurrentAction = 3;
+				MyEvents.gather = false;
 				TextField1.text = "Сажаем подсолнух"; 
 			}
 			
+			protected function button4_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				CurrentAction = 0;
+				MyEvents.gather = true;
+				TextField1.text = "Собираем урожай"; 
+			}
 
 			protected function application1_clickHandler(event:MouseEvent):void
 			{
@@ -74,36 +82,11 @@
 				var i:Number;
 				var j:Number;
 				var p:Point = new Point;
-				var imageSrc:String = "";
-				var block:SkinnableContainer;
-				var age:Number = 4;
-				switch(CurrentAction)
-				{
-					case 1:
-						imageSrc = flowerPictures[age];
-						break;
-					case 2:
-						imageSrc = potatoPictures[age];
-						break;
-					case 3:
-						imageSrc = sunflowerPictures[age];
-						break;
-				}
-				if(CurrentAction == 0)
+				var figureTest:Figure; 
+				
+				/*if(CurrentAction == 0)
 				{
 					CurrentAction = 3;
-					switch(CurrentAction)
-					{
-						case 1:
-							imageSrc = flowerPictures[age];
-							break;
-						case 2:
-							imageSrc = potatoPictures[age];
-							break;
-						case 3:
-							imageSrc = sunflowerPictures[age];
-							break;
-					}
 					for(i = 0; i < partCount; i++)
 					{
 						for(j = 0; j < partCount; j++)
@@ -111,11 +94,13 @@
 							p.x = (maxX/2) + startX + partX * i;
 							p.y = startY + partY * j;
 							p = turnPoint(p);
-							this.parent.addChild(new Figure("../assets/" + allObjects[CurrentAction - 1] + imageSrc + ".png", p));
+							figureTest = new Figure(p, CurrentAction);
+							arrFigures.push(figureTest);
+							this.parent.addChild(figureTest);
 						}
 					}
 					CurrentAction = 0;
-				}
+				}*/
 				if(CurrentAction > 0)
 				{
 					p.x = event.stageX;
@@ -131,13 +116,35 @@
 						p.x += startX;
 						p.y += startY;
 						p = turnPoint(p);
-						this.parent.addChild(new Figure("../assets/" + allObjects[CurrentAction - 1] + imageSrc + ".png", p));
+						figureTest = new Figure(p, CurrentAction);
+						arrFigures.push(figureTest);
+						this.parent.addChild(figureTest);
 					}
 					else
 					{
 						TextField1.text = "false" + p;
 					}
 				}
+			}
+
+
+			protected function application1_activateHandler(event:Event):void
+			{
+			}
+
+
+			protected function button3_clickHandler(event:MouseEvent):void
+			{
+				//Alert.show("Растут: " + arrFigures.length);
+				arrFigures.forEach(growFigure);
+			}
+			
+			private function growFigure(element:Figure, index:int, arr:Array):void
+			{
+				//TextField1.text = "" + index;
+				//arr.splice(index, 1);
+				//this.parent.removeChild(element);
+				element.grow();
 			}
 
 		]]>
@@ -152,8 +159,8 @@
 	<s:Button x="881.25" y="9.9" label="Посадить картошку" width="150" id="PlantPotato" click="PlantPotato_clickHandler(event)"/>
 	<s:Button x="881.25" y="38.9" label="Посадить подсолнух" width="150" click="button1_clickHandler(event)"/>
 	<s:Button x="881.25" y="67.9" label="Посадить клевер" width="150" click="button2_clickHandler(event)"/>
-	<s:Button x="881.25" y="96.9" label="Собрать" width="150"/>
-	<s:Button x="881.25" y="125.9" label="Рости" width="150"/>
+	<s:Button x="881.25" y="96.9" label="Собрать" width="150" click="button4_clickHandler(event)"/>
+	<s:Button x="881.25" y="125.9" label="Рости" width="150" click="button3_clickHandler(event)"/>
 	<mx:Image x="0" y="0" source="../assets/BG.jpg" width="862" height="500" click="image1_clickHandler(event)"/>
 	<s:TextInput y="154" width="144" id="TextField1" x="881"/>
 	<s:SkinnableContainer x="895" y="290" width="106" height="179">
