@@ -8,12 +8,23 @@
 			import mx.controls.Alert;
 			
 			import utils.Figure;
+			import utils.GetHTTPData;
 			import utils.ImageCached;
 			import utils.MyEvents;
 			
 			public static var CurrentAction:Number = 0;
 			private static var currentImage:Image;
-			private static var arrFigures:Array = new Array;
+			
+			private static var startX:Number = 64;
+			private static var startY:Number = 57;
+			private static var maxX:Number = 691; //691
+			private static var maxY:Number = 362; //362
+			private static var part:Number = 260; //195
+			private static var partCount:Number = 6;
+			private static var partX:Number = part/partCount;
+			private static var partY:Number = part/partCount;
+			
+			private var getHTTPData:GetHTTPData = new GetHTTPData(this);
 			
 			protected function button2_clickHandler(event:MouseEvent):void
 			{
@@ -71,14 +82,6 @@
 
 			protected function image1_clickHandler(event:MouseEvent):void
 			{
-				var maxX:Number = 691; //691
-				var maxY:Number = 362; //362
-				var startX:Number = 64;
-				var startY:Number = 57;
-				var part:Number = 260; //195
-				var partCount:Number = 6;
-				var partX:Number = part/partCount;
-				var partY:Number = part/partCount;
 				var i:Number;
 				var j:Number;
 				var p:Point = new Point;
@@ -95,7 +98,7 @@
 							p.y = startY + partY * j;
 							p = turnPoint(p);
 							figureTest = new Figure(p, CurrentAction);
-							arrFigures.push(figureTest);
+							Figure.arrFigures.push(figureTest);
 							this.parent.addChild(figureTest);
 						}
 					}
@@ -109,6 +112,7 @@
 					if(p.x > (maxX/2) + startX && p.x < (maxX/2) + startX + part
 						&& p.y > startY && p.y < startY + part)
 					{
+						// Блог выравнивания по сетке
 						p.x -= startX;
 						p.y -= startY;
 						p.x = int(int(p.x/partX)*partX);
@@ -116,8 +120,9 @@
 						p.x += startX;
 						p.y += startY;
 						p = turnPoint(p);
+						// \\ Блог выравнивания по сетке
 						figureTest = new Figure(p, CurrentAction);
-						arrFigures.push(figureTest);
+						Figure.arrFigures.push(figureTest);
 						this.parent.addChild(figureTest);
 					}
 					else
@@ -136,7 +141,31 @@
 			protected function button3_clickHandler(event:MouseEvent):void
 			{
 				//Alert.show("Растут: " + arrFigures.length);
-				arrFigures.forEach(growFigure);
+				Figure.arrFigures.forEach(growFigure);
+			}
+			
+			// Слушает ответ запроса к серверу
+			public function answer(data:XML, type:Number):void
+			{
+				var figureTest:Figure; 
+				var figures:XML = new XML();
+				var p:Point = new Point();
+				var typeFigure:Number;
+				for each (var fields:XML in data.elements() )
+				{
+					for each(figures in fields.elements())
+					{
+						// figures.attribute("id");
+						typeFigure = Figure.allObjects.indexOf(String(figures.name()));
+						p.x = (maxX/2) + partX * int(figures.attribute("x")) + startX;
+						p.y = partY * int(figures.attribute("y")) + startY;
+						p = turnPoint(p);
+						figureTest = new Figure(p, typeFigure + 1);
+						figureTest.id = figures.attribute("id");
+						Figure.arrFigures.push(figureTest);
+						this.parent.addChild(figureTest);
+					}
+				}
 			}
 			
 			private function growFigure(element:Figure, index:int, arr:Array):void
@@ -145,6 +174,13 @@
 				//arr.splice(index, 1);
 				//this.parent.removeChild(element);
 				element.grow();
+			}
+			
+
+			protected function button5_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				getHTTPData.ask("http://localhost:3000/data/all", "all");
 			}
 
 		]]>
@@ -161,9 +197,10 @@
 	<s:Button x="881.25" y="67.9" label="Посадить клевер" width="150" click="button2_clickHandler(event)"/>
 	<s:Button x="881.25" y="96.9" label="Собрать" width="150" click="button4_clickHandler(event)"/>
 	<s:Button x="881.25" y="125.9" label="Рости" width="150" click="button3_clickHandler(event)"/>
-	<mx:Image x="0" y="0" source="../assets/BG.jpg" width="862" height="500" click="image1_clickHandler(event)"/>
+	<mx:Image x="0" y="0" source="http://localhost:3000/BG.jpg" width="862" height="500" click="image1_clickHandler(event)"/>
 	<s:TextInput y="154" width="144" id="TextField1" x="881"/>
 	<s:SkinnableContainer x="895" y="290" width="106" height="179">
-		<mx:Image x="1" source="../assets/sunflower/Images/Image 9.png" scaleContent="false" width="100" height="130" y="30" z="0" bottom="0"/>
+		<mx:Image x="1" source="http://localhost:3000/sunflower/Images/Image 9.png" scaleContent="false" width="100" height="130" y="30" z="0" bottom="0"/>
 	</s:SkinnableContainer>
+	<s:Button x="881" y="184" label="Вернуть состояние" width="150" click="button5_clickHandler(event)"/>
 </s:Application>

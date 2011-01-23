@@ -18,13 +18,15 @@ package utils
 		private var type:Number;
 		private var p:Point;
 		private var currentImage:Image = new ImageCached();
+		private var DBId:Number;
 		
 		private static var flowerPictures:Array = ['/Image 1', '/Image 3', '/Image 5', '/Image 7', '/Image 9'];
 		private static var potatoPictures:Array = ['/Images/Image 1', '/Images/Image 3'
 			, '/Images/Image 5', '/Images/Image 8', '/Images/Image 10'];
 		private static var sunflowerPictures:Array = ['/Images/Image 1', '/Images/Image 3'
 			, '/Images/Image 5', '/Images/Image 7', '/Images/Image 9'];
-		private static var allObjects:Array = ['clover', 'potato', 'sunflower'];
+		public static var allObjects:Array = ['clover', 'potato', 'sunflower'];
+		public static var arrFigures:Array = new Array;
 		
 		
 		public function Figure(p: Point, type:Number, age:Number = 1)
@@ -41,6 +43,7 @@ package utils
 			if(MyEvents.gather && age == 4)
 			{
 				Alert.show("Собрали " + allObjects[type - 1]);
+				arrFigures.splice(arrFigures.indexOf(this), 1);
 				this.parent.removeChild(this);
 			}
 		}
@@ -78,7 +81,7 @@ package utils
 					imageSrc = sunflowerPictures[age];
 					break;
 			}
-			currentImage.source = "../assets/" + allObjects[type - 1] + imageSrc + ".png";
+			currentImage.source = "http://localhost:3000/" + allObjects[type - 1] + imageSrc + ".png";
 			if(create)
 			{
 				currentImage.bottom = 0;

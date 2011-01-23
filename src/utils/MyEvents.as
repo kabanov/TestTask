@@ -6,7 +6,7 @@ package utils
 	
 	import mx.controls.Alert;
 	
-	
+	// Экспериментальный класс, пока не доделал
 	public class MyEvents extends Sprite
 	{
 		public static var gather:Boolean;
