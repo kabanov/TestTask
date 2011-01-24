@@ -85,49 +85,40 @@
 				var i:Number;
 				var j:Number;
 				var p:Point = new Point;
-				var figureTest:Figure; 
-				
-				/*if(CurrentAction == 0)
-				{
-					CurrentAction = 3;
-					for(i = 0; i < partCount; i++)
-					{
-						for(j = 0; j < partCount; j++)
-						{							
-							p.x = (maxX/2) + startX + partX * i;
-							p.y = startY + partY * j;
-							p = turnPoint(p);
-							figureTest = new Figure(p, CurrentAction);
-							Figure.arrFigures.push(figureTest);
-							this.parent.addChild(figureTest);
-						}
-					}
-					CurrentAction = 0;
-				}*/
+				var figureTest:Figure;
 				if(CurrentAction > 0)
 				{
-					p.x = event.stageX;
-					p.y = event.stageY - 130/2;
+					p.x = event.stageX - 40;
+					p.y = event.stageY;
+					p.y /= 1.1;
 					p = unTurnPoint(p);
-					if(p.x > (maxX/2) + startX && p.x < (maxX/2) + startX + part
-						&& p.y > startY && p.y < startY + part)
+					p.x -= startX;
+					p.x -= maxX/2;
+					p.y -= startY;
+					var coordX:Number = int(p.x/partX) - 1;
+					var coordY:Number = int(p.y/partY) - 1;
+					p.x = int(coordX*partX);
+					p.y = int(coordY*partY);
+					p.x += startX;
+					p.x += maxX/2;
+					p.y += startY;
+					p = turnPoint(p);
+					TextField1.text = "" + coordX + "" + coordY;
+					// Суть проверки в том, что сетка - это квадрат от 0 до partCount
+					// и если мы в эту сетку не убираемся, значит клик произошёл не по полю
+					if(coordX >= 0 && coordX < partCount && coordY >= 0 && coordY < partCount)
 					{
-						// Блог выравнивания по сетке
-						p.x -= startX;
-						p.y -= startY;
-						p.x = int(int(p.x/partX)*partX);
-						p.y = int(int(p.y/partY)*partY);
-						p.x += startX;
-						p.y += startY;
-						p = turnPoint(p);
-						// \\ Блог выравнивания по сетке
 						figureTest = new Figure(p, CurrentAction);
 						Figure.arrFigures.push(figureTest);
 						this.parent.addChild(figureTest);
-					}
-					else
-					{
-						TextField1.text = "false" + p;
+						Alert.show("" + Figure.allObjects[CurrentAction - 1]);
+						var data:Object = {
+							"type" : "add",
+							"x" : coordX,
+							"y" : coordY,
+							"figure": Figure.allObjects[CurrentAction - 1]
+						}
+						getHTTPData.ask("http://localhost:3000/data/save", "add", data);
 					}
 				}
 			}
@@ -145,26 +136,33 @@
 			}
 			
 			// Слушает ответ запроса к серверу
-			public function answer(data:XML, type:Number):void
+			public function answer(data:XML, type:String):void
 			{
-				var figureTest:Figure; 
-				var figures:XML = new XML();
-				var p:Point = new Point();
-				var typeFigure:Number;
-				for each (var fields:XML in data.elements() )
+				switch(type)
 				{
-					for each(figures in fields.elements())
-					{
-						// figures.attribute("id");
-						typeFigure = Figure.allObjects.indexOf(String(figures.name()));
-						p.x = (maxX/2) + partX * int(figures.attribute("x")) + startX;
-						p.y = partY * int(figures.attribute("y")) + startY;
-						p = turnPoint(p);
-						figureTest = new Figure(p, typeFigure + 1);
-						figureTest.id = figures.attribute("id");
-						Figure.arrFigures.push(figureTest);
-						this.parent.addChild(figureTest);
-					}
+					case "def":
+						var figureTest:Figure; 
+						var figures:XML = new XML();
+						var p:Point = new Point();
+						var typeFigure:Number;
+						for each (var fields:XML in data.elements() )
+						{
+							for each(figures in fields.elements())
+							{
+								// figures.attribute("id");
+								typeFigure = Figure.allObjects.indexOf(String(figures.name()));
+								p.x = (maxX/2) + partX * int(figures.attribute("x")) + startX;
+								p.y = partY * int(figures.attribute("y")) + startY;
+								p = turnPoint(p);
+								figureTest = new Figure(p, typeFigure + 1);
+								figureTest.id = figures.attribute("id");
+								Figure.arrFigures.push(figureTest);
+								this.parent.addChild(figureTest);
+							}
+						}
+						break;
+					case "add":
+						Alert.show("Добавлен новый элемент");
 				}
 			}
 			
@@ -199,8 +197,5 @@
 	<s:Button x="881.25" y="125.9" label="Рости" width="150" click="button3_clickHandler(event)"/>
 	<mx:Image x="0" y="0" source="http://localhost:3000/BG.jpg" width="862" height="500" click="image1_clickHandler(event)"/>
 	<s:TextInput y="154" width="144" id="TextField1" x="881"/>
-	<s:SkinnableContainer x="895" y="290" width="106" height="179">
-		<mx:Image x="1" source="http://localhost:3000/sunflower/Images/Image 9.png" scaleContent="false" width="100" height="130" y="30" z="0" bottom="0"/>
-	</s:SkinnableContainer>
 	<s:Button x="881" y="184" label="Вернуть состояние" width="150" click="button5_clickHandler(event)"/>
 </s:Application>

@@ -14,7 +14,7 @@ package utils{
 			http.resultFormat = "xml";
 			__parent = pa;
 		}
-		public function ask(what:String, type:String):void { // Метод вызывается родителем. Параметр what - имя (URL) запрашиваемого файла
+		public function ask(what:String, type:String = "def", data:Object = ""):void { // Метод вызывается родителем. Параметр what - имя (URL) запрашиваемого файла
 			__type = type;
 			/*var loader:URLLoader=new URLLoader();
 			loader.dataFormat = URLLoaderDataFormat.TEXT;
@@ -23,7 +23,7 @@ package utils{
 			*/
 			http.url = what;
 			http.method = "GET";
-			http.request = {test: "testText"};
+			http.request = data;
 			http.addEventListener(ResultEvent.RESULT, handleComplete);
 			http.send();
 		}

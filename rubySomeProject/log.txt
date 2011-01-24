@@ -1,0 +1,2 @@
+Create new element 'Figure31': (2, 1)
+Create new element 'potato': (0, 1)

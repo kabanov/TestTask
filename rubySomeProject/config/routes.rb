@@ -1,9 +1,7 @@
 RubySomeProject::Application.routes.draw do
   get "data/all"
-  post "data/all"
-
   get "hello/index"
-  post "hello/index"
+  get "data/save"
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

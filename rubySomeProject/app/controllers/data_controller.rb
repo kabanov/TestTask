@@ -4,10 +4,10 @@ include REXML
 class DataController < ApplicationController
   def all
     @xml = ""
-    doc = REXML::Document.new(params["xml"])
-    root = doc.elements.each( "*/country/field" ) { |element|
-      xml += element
-    }
+    doc = REXML::Document.new()
+#    root = doc.elements.each( "*/country/field" ) { |element|
+#      xml += element
+#    }
     root = doc.add_element( "country" )
     field = root.add_element( "field" )
     field.add_attribute( "zero_x", "0")
@@ -25,9 +25,15 @@ class DataController < ApplicationController
       name.add_attribute( "y", el["y"] )
       name.add_attribute( "process_end", el["process_end"] )
     }
-    root.write( @xml, 1 )
+    doc.write( @xml, 1 )
     # params['test'];
     render :xml => @xml
+  end
+  
+  def save
+    data = "Create new element '" + params['figure'] + "': (" + params['x'] + ", " + params['y'] + ")\n"
+    File.open('log.txt', 'a'){ |file| file.write data }
+    render :xml => ""
   end
 
 end
