@@ -111,7 +111,6 @@
 						figureTest = new Figure(p, CurrentAction);
 						Figure.arrFigures.push(figureTest);
 						this.parent.addChild(figureTest);
-						Alert.show("" + Figure.allObjects[CurrentAction - 1]);
 						var data:Object = {
 							"type" : "add",
 							"x" : coordX,
@@ -162,7 +161,8 @@
 						}
 						break;
 					case "add":
-						Alert.show("Добавлен новый элемент");
+						//Alert.show("Добавлен новый элемент");
+						break;
 				}
 			}
 			
@@ -178,7 +178,7 @@
 			protected function button5_clickHandler(event:MouseEvent):void
 			{
 				// TODO Auto-generated method stub
-				getHTTPData.ask("http://localhost:3000/data/all", "all");
+				getHTTPData.ask("http://localhost:3000/data/all", "def");
 			}
 
 		]]>
