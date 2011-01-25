@@ -25,6 +25,7 @@
 			private static var partY:Number = part/partCount;
 			
 			private var getHTTPData:GetHTTPData = new GetHTTPData(this);
+			private var myevents:MyEvents = new MyEvents(this);
 			
 			protected function button2_clickHandler(event:MouseEvent):void
 			{
@@ -109,13 +110,15 @@
 					if(coordX >= 0 && coordX < partCount && coordY >= 0 && coordY < partCount)
 					{
 						figureTest = new Figure(p, CurrentAction);
-						Figure.arrFigures.push(figureTest);
+						var numFigure:Number = Figure.arrFigures.push(figureTest);
 						this.parent.addChild(figureTest);
 						var data:Object = {
 							"type" : "add",
+							"num" : numFigure - 1,
 							"x" : coordX,
 							"y" : coordY,
-							"figure": Figure.allObjects[CurrentAction - 1]
+							"figure" : Figure.allObjects[CurrentAction - 1], 
+							"r" : int(Math.random()*1000)
 						}
 						getHTTPData.ask("http://localhost:3000/data/save", "add", data);
 					}
@@ -128,6 +131,7 @@
 			}
 
 
+			// функция для роста фигур
 			protected function button3_clickHandler(event:MouseEvent):void
 			{
 				//Alert.show("Растут: " + arrFigures.length);
@@ -161,24 +165,52 @@
 						}
 						break;
 					case "add":
+						var figure:Figure = Figure.arrFigures[data.attribute("num")];
+						figure.DBId = data.attribute("id");
 						//Alert.show("Добавлен новый элемент");
+						break;
+					case "grow":
+						//Alert.show("Выросла фигура");
 						break;
 				}
 			}
 			
+			// Рост определённой фигуры, callback от прохода массива
 			private function growFigure(element:Figure, index:int, arr:Array):void
 			{
 				//TextField1.text = "" + index;
 				//arr.splice(index, 1);
 				//this.parent.removeChild(element);
-				element.grow();
+				if(element.getAge() != element.grow())
+				{
+					var data:Object = {
+						"type" : "grow",
+						"id" : element.DBId,
+						"figure" : Figure.allObjects[element.type],
+						"age" : element.getAge(),
+						"r" : int(Math.random()*1000)
+					}
+					getHTTPData.ask("http://localhost:3000/data/save", "grow", data);
+				}
 			}
 			
-
+			// восстановление состояния с сервера
 			protected function button5_clickHandler(event:MouseEvent):void
 			{
 				// TODO Auto-generated method stub
-				getHTTPData.ask("http://localhost:3000/data/all", "def");
+				getHTTPData.ask("http://localhost:3000/data/all", "def", {"r" : int(Math.random()*1000)});
+			}
+			
+			// обработчик, при собирании фигуры
+			public function onRemoveFigure(figure: Object):void
+			{
+				var data:Object = {
+					"type" : "rem",
+					"r" : int(Math.random()*1000),
+					"figure" : Figure.allObjects[figure.type],
+					"id" : figure.DBId
+				}
+				getHTTPData.ask("http://localhost:3000/data/save", "rem", data);
 			}
 
 		]]>

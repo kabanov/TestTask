@@ -8,6 +8,7 @@ package utils
 	import mx.controls.Alert;
 	import mx.controls.Image;
 	
+	import spark.components.Application;
 	import spark.components.SkinnableContainer;
 	
 	import utils.ImageCached;
@@ -15,10 +16,11 @@ package utils
 	public class Figure extends SkinnableContainer
 	{
 		private var age:Number;
-		private var type:Number;
-		private var p:Point;
+		private var p:Point = new Point;
 		private var currentImage:Image = new ImageCached();
-		private var DBId:Number;
+		public var DBId:Number = 0;
+		public var type:Number = 0;
+		public static var applicationScript:Object;
 		
 		private static var flowerPictures:Array = ['/Image 1', '/Image 3', '/Image 5', '/Image 7', '/Image 9'];
 		private static var potatoPictures:Array = ['/Images/Image 1', '/Images/Image 3'
@@ -45,16 +47,12 @@ package utils
 				Alert.show("Собрали " + allObjects[type - 1]);
 				arrFigures.splice(arrFigures.indexOf(this), 1);
 				this.parent.removeChild(this);
+				if (this.hasEventListener(MouseEvent.MOUSE_UP))
+					this.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+				MyEvents.mainClass.onRemoveFigure(this)
 			}
 		}
 		
-		public function destroy():void
-		{
-			Alert.show("Меня удаляют!");
-			if (this.hasEventListener(MouseEvent.MOUSE_UP))
-				this.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-		}
-
 		public function grow():Number
 		{
 			//Alert.show("Растём!");
@@ -62,7 +60,13 @@ package utils
 			{
 				++this.age;
 				this.paint();
+				return this.age;
 			}
+			return this.age;
+		}
+		
+		public function getAge():Number
+		{
 			return this.age;
 		}
 		

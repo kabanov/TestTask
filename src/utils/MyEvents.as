@@ -10,18 +10,14 @@ package utils
 	public class MyEvents extends Sprite
 	{
 		public static var gather:Boolean;
+		public static var mainClass: Object;
 		
-		public function MyEvents()
+		public function MyEvents(pa: Object)
 		{
-			Alert.show("Error in query.");
-			stage.addEventListener(MouseEvent.MOUSE_UP, function onMouseUp():void {
-				Alert.show("Error in query.");
-			});
-			Alert.show("Error in query.");
-		}
-		
-		private function onMouseUp():void {
-			Alert.show("Error in query.");
+			mainClass = pa; 
+			/* pa.addEventListener(MouseEvent.MOUSE_UP, function onMouseUp():void {
+			 	Alert.show("Error in query.");
+			});*/
 		}
 	}
 }

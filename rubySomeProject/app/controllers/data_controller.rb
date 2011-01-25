@@ -26,14 +26,39 @@ class DataController < ApplicationController
       name.add_attribute( "process_end", el["process_end"] )
     }
     doc.write( @xml, 1 )
-    # params['test'];
+    # params['test']
     render :xml => @xml
   end
   
   def save
-    data = "Create new element '" + params['figure'] + "': (" + params['x'] + ", " + params['y'] + ")\n"
-    File.open('log.txt', 'a'){ |file| file.write data }
-    render :xml => ""
+    @xml = ""
+    doc = REXML::Document.new()
+    
+    if(params['type'] == "add")
+      id = (1 + rand(1000)).to_s
+      data = "Create new element '" + params['figure'] + "', id = " + id + ": (" + params['x'] + ", " + params['y'] + ")\n"
+      File.open('log.txt', 'a'){ |file| file.write data }
+      root = doc.add_element( "element" )
+      root.add_attribute( "id", id)
+      root.add_attribute( "num", params['num'])
+      doc.write( @xml, 1 )
+      render :xml => @xml
+    end
+    
+    if(params['type'] == "grow")
+      data = "Grow element '" + params['figure'] + "', age, id = " + params['id'] + ": (" + params['age'] + ")\n"
+      File.open('log.txt', 'a'){ |file| file.write data }
+      doc.write( @xml, 1 )
+      render :xml => @xml
+    end
+    
+    if(params['type'] == "rem")
+      data = "Remove element '" + params['figure'] + "', id: (" + params['id'] + ")\n"
+      File.open('log.txt', 'a'){ |file| file.write data }
+      doc.write( @xml, 1 )
+      render :xml => @xml
+    end
+    
   end
 
 end
