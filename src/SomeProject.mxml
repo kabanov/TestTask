@@ -119,7 +119,7 @@
 							"y" : coordY,
 							"figure" : Figure.allObjects[CurrentAction - 1], 
 							"r" : int(Math.random()*1000),
-							"f_type" : figureTest.type
+							"f_type" : figureTest.type - 1
 						}
 						getHTTPData.ask("http://localhost:3000/data/save", "add", data);
 					}
