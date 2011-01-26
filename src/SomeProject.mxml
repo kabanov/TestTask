@@ -118,7 +118,8 @@
 							"x" : coordX,
 							"y" : coordY,
 							"figure" : Figure.allObjects[CurrentAction - 1], 
-							"r" : int(Math.random()*1000)
+							"r" : int(Math.random()*1000),
+							"f_type" : figureTest.type
 						}
 						getHTTPData.ask("http://localhost:3000/data/save", "add", data);
 					}
@@ -157,8 +158,8 @@
 								p.x = (maxX/2) + partX * int(figures.attribute("x")) + startX;
 								p.y = partY * int(figures.attribute("y")) + startY;
 								p = turnPoint(p);
-								figureTest = new Figure(p, typeFigure + 1);
-								figureTest.id = figures.attribute("id");
+								figureTest = new Figure(p, typeFigure + 1, figures.attribute("age"));
+								figureTest.DBId = figures.attribute("id");
 								Figure.arrFigures.push(figureTest);
 								this.parent.addChild(figureTest);
 							}
@@ -186,7 +187,7 @@
 					var data:Object = {
 						"type" : "grow",
 						"id" : element.DBId,
-						"figure" : Figure.allObjects[element.type],
+						"figure" : Figure.allObjects[element.type - 1],
 						"age" : element.getAge(),
 						"r" : int(Math.random()*1000)
 					}
@@ -207,7 +208,7 @@
 				var data:Object = {
 					"type" : "rem",
 					"r" : int(Math.random()*1000),
-					"figure" : Figure.allObjects[figure.type],
+					"figure" : Figure.allObjects[figure.type - 1],
 					"id" : figure.DBId
 				}
 				getHTTPData.ask("http://localhost:3000/data/save", "rem", data);

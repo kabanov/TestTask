@@ -31,7 +31,7 @@ package utils
 		public static var arrFigures:Array = new Array;
 		
 		
-		public function Figure(p: Point, type:Number, age:Number = 1)
+		public function Figure(p: Point, type:Number, age:Number = 0)
 		{
 			this.p = p;
 			this.type = type;

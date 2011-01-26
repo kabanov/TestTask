@@ -1,6 +1,6 @@
 RubySomeProject::Application.routes.draw do
   get "data/all"
-  get "hello/index"
+  get "data/test"
   get "data/save"
 
   # The priority is based upon order of creation:
